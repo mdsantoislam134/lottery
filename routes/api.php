@@ -13,3 +13,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //core apis
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::post('/profile-update', [AuthController::class, 'profileupdate']);
+
+});

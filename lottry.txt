@@ -1,0 +1,14 @@
+ register api
+post  = http://127.0.0.1:8000/api/register
+Fileds = full_name,email,password,phone_number 
+
+
+
+Login api
+post  = http://127.0.0.1:8000/api/login
+Fileds = email,password
+
+
+ profile update api
+post  = http://127.0.0.1:8000/api/profile-update
+Fileds = full_name,email,password,phone_number,profile_image,  => all nullable <=
