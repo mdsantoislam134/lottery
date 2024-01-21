@@ -11,8 +11,6 @@ class OrderController extends Controller
   public function storeOrder(Request $request)
   {
       $user = $request->user();
-    
-      // Define the mapping array for company names
       $mapping = [
           '1' => 'M',
           '2' => 'P',
@@ -80,21 +78,22 @@ class OrderController extends Controller
       }
     
       return response()->json([
-        'totalamount' => $totalOrderAmount,
-        'user' => [
-            'username' => $user->username,
-            'user_id' => $user->id,
+        'order' => [
+            'id' => $order->id,
+            'totalamount' => $totalOrderAmount,
+            'remark' => $order->remark,
+            'username' => $order->username,
+            'user_id' => $order->user_id,
+            'workingdate' => $order->workingdate,
+            'lotterycode' => $order->lotterycode,
+            'companies' => $order->companies,
+            'order_count' => $order->order_count,
+            'status' => $order->status,
+            'total_order_amount' => $order->totalamount,
         ],
-        'remark' => $order->remark,
-        'username' => $order->username,
-        'user_id' => $order->user_id,
-        'workingdate' => $order->workingdate,
-        'lotterycode' => $order->lotterycode,
-        'companies' => $order->companies,
-        'order_count' => $order->order_count,
-        'status' => $order->status,
-        'total_order_amount' => $order->totalamount,
-    ], 201);
+        'user' => $user,
+    ], 201);    
+    
   }
   
 
@@ -115,14 +114,13 @@ class OrderController extends Controller
     $order = Order::find($id);
     $order->status = "cancel";
     $order->save();
-
     $user = $request->user();
     $user->credite_limit = $user->credite_limit + $order->totalamount; 
       $user->credit_used = $user->credit_used - $order->totalamount; 
       $user->available_credit = $user->credit_used +  $user->credite_limit - $user->credit_used; 
 $user->save();
 
-return response()->json(['order' => $order,$user], 201);
+return response()->json(['order' => $order,'user'=>$user], 200);
  }
 
  public function convertHash(Request $request)

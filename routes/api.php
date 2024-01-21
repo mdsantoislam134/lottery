@@ -29,6 +29,5 @@ Route::get('/order-cancel/{id}', [OrderController::class, 'cancelorders']);
 
 Route::post('/order-place', [OrderController::class, 'storeOrder']);
 
-
 });
 Route::post('/convert', [OrderController::class, 'convertHash']);
