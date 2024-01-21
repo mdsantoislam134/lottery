@@ -70,13 +70,13 @@ class OrderController extends Controller
           $totalOrderAmount += $order->totalamount;
           $order->order_count = $user->orders()->count() + 1;
           $order->status = "active";
-          $order->save();
           $user->credite_limit = $user->credite_limit - $company * $minutes;
           $user->credit_used = $user->credit_used + $company * $minutes;
           $user->available_credit = $user->credit_used + $user->credite_limit - $user->credit_used;
-          $user->save();
+         
       }
-    
+      $order->save();
+      $user->save();
       return response()->json([
         'order' => [
             'id' => $order->id,
@@ -89,7 +89,6 @@ class OrderController extends Controller
             'companies' => $order->companies,
             'order_count' => $order->order_count,
             'status' => $order->status,
-            'total_order_amount' => $order->totalamount,
         ],
         'user' => $user,
     ], 201);    
