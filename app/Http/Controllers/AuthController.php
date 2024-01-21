@@ -6,41 +6,36 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
 
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            
-            'full_name' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'phone_number' => 'required|unique:users',
-            'password' => 'required|min:6',
-            
+        // Validate the incoming request data
+        $validatedData = $request->validate([
+            'username' => 'required|string',
+            'username_owner_name' => 'required|string',
+            'roll' => 'required|string',
+            'credite_limit' => 'required|string',
+            'credit_used' => 'required|string',
+            'available_credit' => 'required|string',
+            'cash_balance' => 'required|string',
+            'outtanding_transaction' => 'required|string',
+            'status' => 'required|string',
+            'password' => 'required|string',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 405);
-        }
-
-        $user = new User;
-        $user->full_name = $request->full_name;
-        $user->email = $request->email;
-        $user->phone_number = $request->phone_number;
-        $user->balance = "0";
-        $user->password = bcrypt($request->password);
-        $user->profile_image = "profileimage/user.jpg";
-        $user->save();
-
-        $token = $user->createToken('MyApp')->plainTextToken;
-        
-        return response()->json(['user' => $user, 'token' => $token], 200);
-    }        
-
-
+    
+        // Create a new user instance
+        $user = User::create($validatedData);
+    
+        // Optionally, you might want to perform additional actions here
+    
+        // Return a response, redirect, or perform any other necessary actions
+        return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
+    }
          
 // api login  $ update
 
@@ -112,4 +107,30 @@ public function profileupdate(Request $request,)
 
         return response()->json(['error' => 'Invalid User'], 402);
     }
+
+
+
+
+    public function Adminlogin(Request $request)
+    { 
+        $credentials = $request->only('email', 'password');
+    
+        if (Auth::attempt($credentials)) {
+            $user = $request->user();
+    
+            if ($user->status == "Admin") {
+              
+                return redirect('dashboard');
+            }
+            Auth::logout();
+            return redirect()->back()->with('error', "Invalid User");
+          
+        }
+    
+        return redirect()->back()->with('error', "Invalid User");
+    }
+
+
+
+
 }

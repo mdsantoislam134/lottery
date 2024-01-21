@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -11,10 +12,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //core apis
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'store']);
+
 Route::post('/login', [AuthController::class, 'login']);
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::post('/profile-update', [AuthController::class, 'profileupdate']);
+Route::post('/profile-update', [AuthController::class, 'profileupdate']);
+
+
+Route::post('/order-place', [OrderController::class, 'storeOrder']);
+Route::get('/orders', [OrderController::class, 'getorders']);
+
+Route::get('/order-cancel/{id}', [OrderController::class, 'cancelorders']);
+
+
+
+
 
 });
