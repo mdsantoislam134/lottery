@@ -28,6 +28,8 @@ Route::get('/order-cancel/{id}', [OrderController::class, 'cancelorders']);
 
 
 Route::post('/order-place', [OrderController::class, 'storeOrder']);
+Route::get('/totalaccept', [OrderController::class, 'getTotalAcceptedRejected']);
 
 });
 Route::post('/convert', [OrderController::class, 'convertHash']);
+Route::post('/convert-data', [OrderController::class, 'transformInput']);
