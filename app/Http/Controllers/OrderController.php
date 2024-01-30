@@ -215,12 +215,26 @@ private function transformDynamicInput($input)
         $parts = explode('#', $input);
         $count = count($parts);
 
-        $output = $parts[0] . ' B';
-
-        // Accumulate the sum for values after '#'
-        for ($i = 1; $i < $count; $i++) {
-            $sum += intval($parts[$i]);
-            $output .= ' S' . $parts[$i];
+        switch ($count) {
+            case 2:
+                // Pattern: 1435#1
+                $output = $parts[0] . ' B' . $parts[1];
+                $sum += intval($parts[1]);
+                break;
+            case 3:
+                // Pattern: 1435#1#1
+                $output = $parts[0] . ' B' . $parts[1] . ' S' . $parts[2];
+                $sum += intval($parts[2]);
+                break;
+            case 4:
+                // Pattern: 1435#1#1#1
+                $output = $parts[0] . ' B' . $parts[1] . ' S' . $parts[2] . ' A' . $parts[3];
+                $sum += intval($parts[3]);
+                break;
+            default:
+                // Default pattern
+                $output = $input . ' H';
+                break;
         }
     }
 
