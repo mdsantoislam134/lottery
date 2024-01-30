@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignid('user_id')->constrained('users');
             $table->string('username');
             $table->string('workingdate');
-            $table->string('companies');
             $table->string('lotterycode');
             $table->string('betcount');
             $table->string('totalamount');
