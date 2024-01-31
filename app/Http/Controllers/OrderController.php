@@ -103,12 +103,15 @@ public function makeOrder(Request $request)
           $order->totalamount = $totalSum * $hashLineLength;
           $order->order_count = $user->orders()->count() + 1;
           $order->status = "active";
-          $order->save();
+        
    
-    
+          if ($user->credite_limit < $order->totalamount) {
+            return response()->json(['error' => 'Insufficient credit limit. Order rejected.'], 400);
+        }
        $user->credite_limit = $user->credite_limit - $order->totalamount;
        $user->credit_used = $user->credit_used + $order->totalamount;
        $user->available_credit = $user->credit_used + $user->credite_limit - $user->credit_used;
+       $order->save();
        $user->save();
 
       return response()->json([
@@ -120,7 +123,7 @@ public function makeOrder(Request $request)
             'user_id' => $order->user_id,
             'workingdate' => $order->workingdate,
             'lotterycode' => $order->lotterycode,
-            // 'companies' => $order->companies,
+        
             'order_count' => $order->order_count,
             'status' => $order->status,
             'created_at'=>$order->created_at,
@@ -173,12 +176,12 @@ private function transformDynamicInput($input)
             case 3:
                 // Pattern: 1435#1#1
                 $output = $parts[0] . ' B' . $parts[1] . ' S' . $parts[2];
-                $sum += intval($parts[2]);
+                $sum =$sum +intval($parts[1])+ intval($parts[2]);
                 break;
             case 4:
                 // Pattern: 1435#1#1#1
                 $output = $parts[0] . ' B' . $parts[1] . ' S' . $parts[2] . ' A' . $parts[3];
-                $sum += intval($parts[3]);
+                $sum =$sum +intval($parts[1])+ intval($parts[2])+ intval($parts[3]);
                 break;
             default:
                 // Default pattern
@@ -201,7 +204,7 @@ private function transformWordWithRules($word)
         '5' => 'B',
         '6' => 'K',
         '7' => 'W',
-        '8' => 'G',
+        '8' => 'H',
         '9' => 'E',
     ];
 
