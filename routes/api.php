@@ -8,10 +8,12 @@ use App\Http\Controllers\OrderController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+  
 });
 
 
 //core apis
+Route::get('/user-data/{id}', [AuthController::class, 'specificUserData']);
 Route::post('/register', [AuthController::class, 'store']);
 
 Route::post('/login', [AuthController::class, 'login']);

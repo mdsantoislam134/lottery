@@ -109,6 +109,17 @@ public function profileupdate(Request $request,)
     }
 
 
+    public function specificUserData(Request $request,$id)
+    {
+    
+            $user = User::find($id);
+       
+            return response()->json(['user' => $user], 200);
+     
+
+        return response()->json(['error' => 'Invalid User'], 402);
+    }
+
 
 
     public function Adminlogin(Request $request)
@@ -129,7 +140,6 @@ public function profileupdate(Request $request,)
     
         return redirect()->back()->with('error', "Invalid User");
     }
-
 
 
 
